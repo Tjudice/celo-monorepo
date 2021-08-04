@@ -30,7 +30,7 @@ sudo add-apt-repository -y ppa:ethereum/ethereum
 sudo apt-get update
 sudo apt-get install ethereum
 
-geth account new --password Trevor
+geth account new
 
 export CELO_IMAGE=us.gcr.io/celo-org/geth:$NETWORK
 docker pull $CELO_IMAGE
