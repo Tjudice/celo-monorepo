@@ -23,8 +23,12 @@ yarn
 yarn lerna bootstrap
 yarn lerna run build --ignore docs
 
-brew tap ethereum/ethereum
-brew install ethereum
+# brew tap ethereum/ethereum
+# brew install ethereum
+
+sudo add-apt-repository -y ppa:ethereum/ethereum
+sudo apt-get update
+sudo apt-get install ethereum
 
 export CELO_IMAGE=us.gcr.io/celo-org/geth:$NETWORK
 docker pull $CELO_IMAGE
