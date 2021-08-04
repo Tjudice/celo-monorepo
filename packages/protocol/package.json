@@ -37,6 +37,7 @@
     "make-release": "./scripts/bash/make-release.sh",
     "verify-deployed": "./scripts/bash/verify-deployed.sh",
     "verify-release": "./scripts/bash/verify-release.sh",
+    "deploy": "./scripts/bash/deploy.sh",
     "invite": "./scripts/bash/invite.sh",
     "ganache-dev": "./scripts/bash/ganache.sh",
     "truffle:migrate": "truffle migrate",
