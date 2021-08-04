@@ -30,9 +30,8 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '12'
-      - uses: runs deploy script
+      - name: Deploy srcipt
         run: |
-          ./scripts/bash/deploy.sh
           cd packages/protocol && yarn run deploy -b a -n alfajores -v 5 -k a -p Trevor
         
 

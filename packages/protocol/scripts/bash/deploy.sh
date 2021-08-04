@@ -16,6 +16,7 @@ while getopts 'n:v:b:k:p:' flag; do
     *) error "Unexpected option ${flag}" ;;
   esac
 done
+cd ../..
 
 npm install --global yarn
 yarn
