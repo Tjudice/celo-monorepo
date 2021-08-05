@@ -37,9 +37,8 @@ export CELO_IMAGE=us.gcr.io/celo-org/geth:$NETWORK
 docker pull $CELO_IMAGE
 mkdir celo-data-dir
 # cd celo-data-dir:/root/.celo
-ls
-mv UTC--2021-08-04T04-11-41.231375000Z--7c3ed16519eeceb354ac2d88a6a6722a3a9eb886 ~/home/runner/.ethereum/keystore
-
+ls -a
+mv UTC--2021-08-04T04-11-41.231375000Z--7c3ed16519eeceb354ac2d88a6a6722a3a9eb886 .ethereum/keystore
 cd celo-data-dir
 DATA_DIR="/root/.celo"
 export NETWORK_OPTION="--$NETWORK"
