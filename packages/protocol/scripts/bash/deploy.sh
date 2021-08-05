@@ -48,13 +48,13 @@ docker run --name celo-lightestnode -d --restart unless-stopped --stop-timeout 3
 # geth account new --password secret.txt
 # mv ../UTC--2021-08-04T04-11-41.231375000Z--7c3ed16519eeceb354ac2d88a6a6722a3a9eb886 ~/.ethereum/keystore
 CONT_ID=$(docker inspect --format="{{.Id}}" celo-lightestnode)
-docker run --rm --net=host -v $DATA_DIR:$DATA_DIR --entrypoint /bin/sh -i $CELO_IMAGE -c "cd root"
-docker run --rm --net=host -v $DATA_DIR:$DATA_DIR --entrypoint /bin/sh -i $CELO_IMAGE -c "ls -a"
-docker run --rm --net=host -v $DATA_DIR:$DATA_DIR --entrypoint /bin/sh -i $CELO_IMAGE -c "cd .."
-docker run --rm --net=host -v $DATA_DIR:$DATA_DIR --entrypoint /bin/sh -i $CELO_IMAGE -c "echo -n 'Trevor' > secret.txt"
-docker run --rm --net=host -v $DATA_DIR:$DATA_DIR --entrypoint /bin/sh -i $CELO_IMAGE -c "geth account new --password secret.txt"
-docker cp ../UTC--2021-08-04T04-11-41.231375000Z--7c3ed16519eeceb354ac2d88a6a6722a3a9eb886 CONT_ID:/root/.celo/keystore
-docker run --rm --net=host -v $DATA_DIR:$DATA_DIR --entrypoint /bin/sh -i $CELO_IMAGE -c "geth account import --datadir 'root/.celo/' --password secret.txt UTC--2021-08-04T04-11-41.231375000Z--7c3ed16519eeceb354ac2d88a6a6722a3a9eb886"
+docker exec -w /root celo-lightestnode ls -a
+# docker exec -w /root celo-lightestnode ls -a
+docker exec celo-lightestnode echo -n 'Trevor' > secret.tx
+docker exec celo-lightestnode geth account new --password secret.txt
+docker cp ../UTC--2021-08-04T04-11-41.231375000Z--7c3ed16519eeceb354ac2d88a6a6722a3a9eb886 $CONT_ID:/root/.celo/keystore
+docker exec celo-lightestnode geth account import --datadir $DATA_DIR --password secret.txt UTC--2021-08-04T04-11-41.231375000Z--7c3ed16519eeceb354ac2d88a6a6722a3a9eb886
+# docker run --rm --net=host -v $DATA_DIR:$DATA_DIR --entrypoint /bin/sh -i $CELO_IMAGE -c "geth account import --datadir 'root/.celo/' --password secret.txt UTC--2021-08-04T04-11-41.231375000Z--7c3ed16519eeceb354ac2d88a6a6722a3a9eb886"
 docker info
 ls
 pwd
