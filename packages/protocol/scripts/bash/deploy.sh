@@ -56,10 +56,12 @@ docker exec -w /root/.celo celo-lightestnode ls -a
 # docker exec celo-lightestnode geth account new --password secret.txt
 echo -n 'Trevor' > secret.txt
 docker cp secret.txt $CONT_ID:/root/.celo
-docker exec -w /root/.celo celo-lightestnode geth account new --password secret.txt
+# docker exec -w /root/.celo celo-lightestnode geth account new --password secret.txt
 docker cp ../UTC--2021-08-04T04-11-41.231375000Z--7c3ed16519eeceb354ac2d88a6a6722a3a9eb886 $CONT_ID:/root/.celo/keystore
 docker exec -w /root/.celo/keystore celo-lightestnode ls -a
-docker exec celo-lightestnode geth account import --datadir $DATA_DIR --password secret.txt ./UTC--2021-08-04T04-11-41.231375000Z--7c3ed16519eeceb354ac2d88a6a6722a3a9eb886
+docker exec -w /root/.celo celo-lightestnode geth account import --password secret.txt ./UTC--2021-08-04T04-11-41.231375000Z--7c3ed16519eeceb354ac2d88a6a6722a3a9eb886
+docker exec -w /root/.celo celo-lightestnode geth account import --password secret.txt UTC--2021-08-04T04-11-41.231375000Z--7c3ed16519eeceb354ac2d88a6a6722a3a9eb886
+docker exec -w /root/.celo celo-lightestnode geth --unlock 7c3ed16519eeceb354ac2d88a6a6722a3a9eb886 --password secret.txt
 # docker run --rm --net=host -v $DATA_DIR:$DATA_DIR --entrypoint /bin/sh -i $CELO_IMAGE -c "geth account import --datadir 'root/.celo/' --password secret.txt UTC--2021-08-04T04-11-41.231375000Z--7c3ed16519eeceb354ac2d88a6a6722a3a9eb886"
 docker info
 ls
