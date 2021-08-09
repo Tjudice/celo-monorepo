@@ -30,19 +30,19 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '12'
-      - name: Deploy srcipt
-        run: |
-          cd packages/protocol && yarn run deploy -b a -n alfajores -v 5 -k a -p Trevor
+      # - name: Deploy script
+      #   run: |
+      #     cd packages/protocol && yarn run deploy -b a -n alfajores -v 5 -k a -p Trevor
         
 
-      # - name: yarn
-      #   run: |
-      #     npm install --global yarn
-      #     yarn
-      #     yarn lerna bootstrap
+      - name: yarn
+        run: |
+          npm install --global yarn
+          yarn
+          yarn lerna bootstrap
 
-      # - name: Build packages
-      #   run: yarn lerna run build --ignore docs
+      - name: Build packages
+        run: yarn lerna run build --ignore docs
 
       # - name: Install geth
       #   run: |
@@ -78,24 +78,25 @@ jobs:
       #     geth account import --password password.txt privkey.txt
       #     rm privkey.txt
       #     geth account unlock 
+      # -f 0x7F871c887e6a430D3c1F434737F568B07559F9E7
       
-      # - name: Get branch name
-      #   shell: bash
-      #   run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-      #   id: get_branch
+      - name: Get branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: get_branch
 
-      # - name: Verify previous release
-      #   run: |
-      #     export OLD_BRANCH=core-contracts.v$((${{ env.VERSION }}-1))
-      #     cd packages/protocol && yarn run verify-deployed -b $OLD_BRANCH -n ${{ env.NETWORK }} -f;
+      - name: Verify previous release
+        run: |
+          export OLD_BRANCH=core-contracts.v$((${{ env.VERSION }}-1))
+          cd packages/protocol && yarn run verify-deployed -b $OLD_BRANCH -n ${{ env.NETWORK }} -f;
 
-      # - name: Verify version compatibility
-      #   run: |
-      #     OLD_BRANCH=core-contracts.v$((${{ env.VERSION }}-1))
-      #     NEW_BRANCH=${{ steps.get_branch.outputs.branch }}
-      #     cd packages/protocol && yarn run check-versions -a $OLD_BRANCH -b $NEW_BRANCH -r report.json;
+      - name: Verify version compatibility
+        run: |
+          OLD_BRANCH=core-contracts.v$((${{ env.VERSION }}-1))
+          NEW_BRANCH=${{ steps.get_branch.outputs.branch }}
+          cd packages/protocol && yarn run check-versions -a $OLD_BRANCH -b $NEW_BRANCH -r report.json;
 
-      # - name: Make release
-      #   run: |
-      #     NEW_BRANCH=${{ steps.get_branch.outputs.branch }}
-      #     cd packages/protocol && yarn run make-release -b $NEW_BRANCH -f 0x7F871c887e6a430D3c1F434737F568B07559F9E7 -n ${{ env.NETWORK }} -p proposal.json -r report.json -i ./releaseData/initializationData/release${{ env.VERSION }}.json -l libraries.json;
+      - name: Make release
+        run: |
+          NEW_BRANCH=${{ steps.get_branch.outputs.branch }}
+          cd packages/protocol && yarn run make-release -b $NEW_BRANCH  -n ${{ env.NETWORK }} -p proposal.json -r report.json -i ./releaseData/initializationData/release${{ env.VERSION }}.json -l libraries.json;
