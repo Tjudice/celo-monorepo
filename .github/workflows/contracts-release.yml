@@ -44,27 +44,22 @@ jobs:
       - name: Build packages
         run: yarn lerna run build --ignore docs
 
-      # - name: Install geth
-      #   run: |
-      #     sudo add-apt-repository -y ppa:ethereum/ethereum
-      #     sudo apt-get update
-      #     sudo apt-get install ethereum
+           - name: Setup lightest node
+       
+      if: ${{ env.NETWORK != 'staging' }}
+        run: |
+          export CELO_IMAGE=us.gcr.io/celo-org/geth:${{ env.NETWORK }}
+          docker pull $CELO_IMAGE
+          mkdir celo-data-dir
+          cd celo-data-dir
+          export NETWORK_OPTION="--${{ env.NETWORK }}"
+          docker run --name celo-lightestnode -d --restart unless-stopped --stop-timeout 300 -p 127.0.0.1:8545:8545 -p 127.0.0.1:8546:8546 -p 30303:30303 -p 30303:30303/udp -v $PWD:/root/.celo $CELO_IMAGE --verbosity 3 --syncmode lightest --rpc --rpcaddr 0.0.0.0 --rpcapi eth,net,web3,debug,admin,personal --light.serve 90 --light.maxpeers 1000 --maxpeers 1100 --nousb $NETWORK_OPTION --datadir /root/.celo
+          cd ..
 
-      # - name: Setup lightest node
-      #   if: ${{ env.NETWORK != 'staging' }}
-      #   run: |
-      #     export CELO_IMAGE=us.gcr.io/celo-org/geth:${{ env.NETWORK }}
-      #     docker pull $CELO_IMAGE
-      #     mkdir celo-data-dir
-      #     mv UTC--2021-08-04T04-11-41.231375000Z--7c3ed16519eeceb354ac2d88a6a6722a3a9eb886 celo-data-dir/root/.celo/keystore
-      #     cd celo-data-dir
-      #     export NETWORK_OPTION="--${{ env.NETWORK }}"
-      #     cd account/accountSecret
-      #     echo '${{ secrets.PW }} ' > password.txt
-      #     cd ../..
-      #     docker run --rm --net=host -v $PWD:$PWD --entrypoint /bin/sh -c "geth account import --password $PWD:/root/.celo/account/accountSecret --"
-      #     docker run --name celo-lightestnode -d --restart unless-stopped --stop-timeout 300 -p 127.0.0.1:8545:8545 -p 127.0.0.1:8546:8546 -p 30303:30303 -p 30303:30303/udp -v $PWD:/root/.celo $CELO_IMAGE --verbosity 3 --syncmode lightest --rpc --rpcaddr 0.0.0.0 --rpcapi eth,net,web3,debug,admin,personal --light.serve 90 --light.maxpeers 1000 --maxpeers 1100 --nousb $NETWORK_OPTION --datadir /root/.celo
-      #     cd ..
+      - name: Checking if node is synced
+        if: ${{ env.NETWORK != 'staging' }}
+        run: |
+          while true; do output=$(docker exec -i celo-lightestnode geth attach --exec "eth.syncing" | sed -r "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g"); echo $output; sleep 1; if [ $output == 'false' ]; then break; fi; done
 
       # - name: Checking if node is synced
       #   if: ${{ env.NETWORK != 'staging' }}
@@ -99,4 +94,4 @@ jobs:
       - name: Make release
         run: |
           NEW_BRANCH=${{ steps.get_branch.outputs.branch }}
-          cd packages/protocol && yarn run make-release -b $NEW_BRANCH  -n ${{ env.NETWORK }} -p proposal.json -r report.json -i ./releaseData/initializationData/release${{ env.VERSION }}.json -l libraries.json;
+          cd packages/protocol && yarn run make-release -b $NEW_BRANCH -f 0x7F871c887e6a430D3c1F434737F568B07559F9E7 -n ${{ env.NETWORK }} -p proposal.json -r report.json -i ./releaseData/initializationData/release${{ env.VERSION }}.json -l libraries.json;
