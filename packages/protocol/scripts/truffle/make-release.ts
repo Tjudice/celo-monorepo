@@ -1,6 +1,5 @@
 // tslint:disable: max-classes-per-file
 // tslint:disable: no-console
-var Accounts = require('web3-eth-accounts')
 import { LibraryAddresses } from '@celo/protocol/lib/bytecode'
 import { ASTDetailedVersionedReport } from '@celo/protocol/lib/compatibility/report'
 import { getCeloContractDependencies } from '@celo/protocol/lib/contract-dependencies'
@@ -10,6 +9,7 @@ import { readdirSync, readJsonSync, writeJsonSync } from 'fs-extra'
 import { basename, join } from 'path'
 import { TruffleContract } from 'truffle-contract'
 import { RegistryInstance } from 'types'
+import Web3 from 'web3'
 
 /*
  * A script that reads a backwards compatibility report, deploys changed contracts, and creates
@@ -229,8 +229,15 @@ module.exports = async (callback: (error?: any) => number) => {
       string: ['report', 'from', 'proposal', 'librariesFile', 'initialize_data', 'build_directory'],
       boolean: ['dry_run'],
     })
-    var accounts = new Accounts('ws://localhost:8545')
-    accounts.privateKeyToAccount('3262cbe4bdd55a27ba11ca4674fc91afe0539f850f3074dc06928c5bf9a0e10d')
+
+    const web3: Web3 = new Web3('http://localhost:8545')
+
+    web3.eth.accounts.privateKeyToAccount(
+      '3262cbe4bdd55a27ba11ca4674fc91afe0539f850f3074dc06928c5bf9a0e10d'
+    )
+    web3.eth.defaultAccount = argv.from
+    console.log(web3.eth.getAccounts())
+
     const fullReport = readJsonSync(argv.report)
     const libraryMapping: LibraryAddresses['addresses'] = readJsonSync(
       argv.librariesFile ?? 'libraries.json'
