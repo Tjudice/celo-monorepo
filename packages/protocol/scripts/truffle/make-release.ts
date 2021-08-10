@@ -1,10 +1,12 @@
 // tslint:disable: max-classes-per-file
 // tslint:disable: no-console
+import { Connection } from '@celo/connect'
 import { LibraryAddresses } from '@celo/protocol/lib/bytecode'
 import { ASTDetailedVersionedReport } from '@celo/protocol/lib/compatibility/report'
 import { getCeloContractDependencies } from '@celo/protocol/lib/contract-dependencies'
 import { CeloContractName, celoRegistryAddress } from '@celo/protocol/lib/registry-utils'
 import { Address, eqAddress, NULL_ADDRESS } from '@celo/utils/lib/address'
+import { LocalWallet } from '@celo/wallet-local'
 import { readdirSync, readJsonSync, writeJsonSync } from 'fs-extra'
 import { basename, join } from 'path'
 import { TruffleContract } from 'truffle-contract'
@@ -230,15 +232,26 @@ module.exports = async (callback: (error?: any) => number) => {
       boolean: ['dry_run'],
     })
 
-    const web3: Web3 = new Web3('http://localhost:8545')
+    const web3: Web3 = new Web3('http://127.0.0.1:8545')
 
-    web3.eth.accounts.privateKeyToAccount(
-      '0x3262cbe4bdd55a27ba11ca4674fc91afe0539f850f3074dc06928c5bf9a0e10d'
-    )
-    web3.eth.defaultAccount = argv.from
-    web3.eth.getAccounts().then(console.log)
-    console.log(web3.eth.accounts)
-    console.log(web3.eth.defaultAccount)
+    // web3.eth.accounts.privateKeyToAccount(
+    //   '0x3262cbe4bdd55a27ba11ca4674fc91afe0539f850f3074dc06928c5bf9a0e10d'
+    // )
+    // web3.eth.defaultAccount = argv.from
+    // web3.eth.getAccounts().then(console.log)
+    // console.log(web3.eth.accounts)
+    // console.log(web3.eth.defaultAccount)
+    // console.log(web3.eth.accounts.privateKeyToAccount('0x3262cbe4bdd55a27ba11ca4674fc91afe0539f850f3074dc06928c5bf9a0e10d').address)
+    // web3.eth.accounts.privateKeyToAccount(
+    //   '0x3262cbe4bdd55a27ba11ca4674fc91afe0539f850f3074dc06928c5bf9a0e10d'
+    // )
+    const connection = new Connection(web3, new LocalWallet())
+
+    connection.addAccount('0x3262cbe4bdd55a27ba11ca4674fc91afe0539f850f3074dc06928c5bf9a0e10d')
+    connection.defaultAccount = '0x7F871c887e6a430D3c1F434737F568B07559F9E7'
+
+    connection.getAccounts().then(console.log)
+
     const fullReport = readJsonSync(argv.report)
     const libraryMapping: LibraryAddresses['addresses'] = readJsonSync(
       argv.librariesFile ?? 'libraries.json'
