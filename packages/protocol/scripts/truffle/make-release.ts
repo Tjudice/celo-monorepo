@@ -236,8 +236,7 @@ module.exports = async (callback: (error?: any) => number) => {
       '3262cbe4bdd55a27ba11ca4674fc91afe0539f850f3074dc06928c5bf9a0e10d'
     )
     web3.eth.defaultAccount = argv.from
-    console.log(web3.eth.getAccounts())
-
+    web3.eth.getAccounts().then((e) => console.log(e))
     const fullReport = readJsonSync(argv.report)
     const libraryMapping: LibraryAddresses['addresses'] = readJsonSync(
       argv.librariesFile ?? 'libraries.json'
