@@ -233,10 +233,12 @@ module.exports = async (callback: (error?: any) => number) => {
     const web3: Web3 = new Web3('http://localhost:8545')
 
     web3.eth.accounts.privateKeyToAccount(
-      '3262cbe4bdd55a27ba11ca4674fc91afe0539f850f3074dc06928c5bf9a0e10d'
+      '0x3262cbe4bdd55a27ba11ca4674fc91afe0539f850f3074dc06928c5bf9a0e10d'
     )
     web3.eth.defaultAccount = argv.from
-    web3.eth.getAccounts().then((e) => console.log(e))
+    web3.eth.getAccounts().then(console.log)
+    console.log(web3.eth.accounts)
+    console.log(web3.eth.defaultAccount)
     const fullReport = readJsonSync(argv.report)
     const libraryMapping: LibraryAddresses['addresses'] = readJsonSync(
       argv.librariesFile ?? 'libraries.json'
