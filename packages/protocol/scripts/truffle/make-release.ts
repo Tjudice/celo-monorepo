@@ -237,14 +237,7 @@ module.exports = async (callback: (error?: any) => number) => {
     // web3.eth.accounts.privateKeyToAccount(
     //   '0x3262cbe4bdd55a27ba11ca4674fc91afe0539f850f3074dc06928c5bf9a0e10d'
     // )
-    // web3.eth.defaultAccount = argv.from
-    // web3.eth.getAccounts().then(console.log)
-    // console.log(web3.eth.accounts)
-    // console.log(web3.eth.defaultAccount)
-    // console.log(web3.eth.accounts.privateKeyToAccount('0x3262cbe4bdd55a27ba11ca4674fc91afe0539f850f3074dc06928c5bf9a0e10d').address)
-    // web3.eth.accounts.privateKeyToAccount(
-    //   '0x3262cbe4bdd55a27ba11ca4674fc91afe0539f850f3074dc06928c5bf9a0e10d'
-    // )
+
     const connection = new Connection(web3, new LocalWallet())
 
     connection.addAccount('0x3262cbe4bdd55a27ba11ca4674fc91afe0539f850f3074dc06928c5bf9a0e10d')
