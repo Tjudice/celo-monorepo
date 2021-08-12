@@ -243,9 +243,14 @@ module.exports = async (callback: (error?: any) => number) => {
     connection.addAccount('0x3262cbe4bdd55a27ba11ca4674fc91afe0539f850f3074dc06928c5bf9a0e10d')
     connection.getAccounts().then(function (e) {
       connection.defaultAccount = e[0]
+      console.log(e[0])
+      console.log(connection.defaultAccount)
+      console.log('TEST')
     })
 
-    web3.eth.personal.unlockAccount(connection.defaultAccount, 'A', 600)
+    await web3.eth.personal.unlockAccount(connection.defaultAccount, 'A', 600)
+
+    connection.getAccounts().then(console.log)
 
     const res = await connection.sendTransaction({
       from: '0x7F871c887e6a430D3c1F434737F568B07559F9E7',
@@ -255,7 +260,7 @@ module.exports = async (callback: (error?: any) => number) => {
 
     console.log(res)
 
-    // connection.getAccounts().then(console.log)
+    connection.getAccounts().then(console.log)
 
     // connection.defaultAccount = '0x7F871c887e6a430D3c1F434737F568B07559F9E7'
 
