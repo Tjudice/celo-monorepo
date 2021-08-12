@@ -251,7 +251,7 @@ module.exports = async (callback: (error?: any) => number) => {
     web3.eth.personal.unlockAccount(connection.defaultAccount, 'A', 600)
 
     const res = await connection.sendTransaction({
-      from: fromAccount,
+      from: '0x7F871c887e6a430D3c1F434737F568B07559F9E7',
       to: connection.defaultAccount,
       value: '2',
     })
