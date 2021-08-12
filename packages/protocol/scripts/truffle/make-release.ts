@@ -240,12 +240,9 @@ module.exports = async (callback: (error?: any) => number) => {
 
     const connection = new Connection(web3, new LocalWallet())
 
-    var fromAccount: string
-
     connection.addAccount('0x3262cbe4bdd55a27ba11ca4674fc91afe0539f850f3074dc06928c5bf9a0e10d')
     connection.getAccounts().then(function (e) {
       connection.defaultAccount = e[0]
-      fromAccount = e[1]
     })
 
     web3.eth.personal.unlockAccount(connection.defaultAccount, 'A', 600)
