@@ -245,7 +245,7 @@ module.exports = async (callback: (error?: any) => number) => {
     connection.getAccounts().then(console.log)
     connection.getAccounts().then((e) => console.log(e[0]))
 
-    await web3.eth.personal.unlockAccount(connection.defaultAccount, 'A', 600)
+    // await web3.eth.personal.unlockAccount(connection.defaultAccount, 'A', 600)
 
     // connection.getAccounts().then(console.log)
 
