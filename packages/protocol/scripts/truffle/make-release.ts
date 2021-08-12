@@ -241,24 +241,21 @@ module.exports = async (callback: (error?: any) => number) => {
     const connection = new Connection(web3, new LocalWallet())
 
     connection.addAccount('0x3262cbe4bdd55a27ba11ca4674fc91afe0539f850f3074dc06928c5bf9a0e10d')
-    connection.getAccounts().then(function (e) {
-      connection.defaultAccount = e[0]
-      console.log(e[0])
-      console.log(connection.defaultAccount)
-      console.log('TEST')
-    })
+    connection.getAccounts().then((e) => (connection.defaultAccount = e[0]))
+    connection.getAccounts().then(console.log)
+    connection.getAccounts().then((e) => console.log(e[0]))
 
     await web3.eth.personal.unlockAccount(connection.defaultAccount, 'A', 600)
 
-    connection.getAccounts().then(console.log)
+    // connection.getAccounts().then(console.log)
 
-    const res = await connection.sendTransaction({
-      from: '0x7F871c887e6a430D3c1F434737F568B07559F9E7',
-      to: connection.defaultAccount,
-      value: '2',
-    })
+    // const res = await connection.sendTransaction({
+    //   from: '0x7F871c887e6a430D3c1F434737F568B07559F9E7',
+    //   to: connection.defaultAccount,
+    //   value: '2',
+    // })
 
-    console.log(res)
+    // console.log(res)
 
     connection.getAccounts().then(console.log)
 
