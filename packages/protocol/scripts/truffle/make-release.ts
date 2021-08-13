@@ -5,7 +5,6 @@ import { LibraryAddresses } from '@celo/protocol/lib/bytecode'
 import { ASTDetailedVersionedReport } from '@celo/protocol/lib/compatibility/report'
 import { getCeloContractDependencies } from '@celo/protocol/lib/contract-dependencies'
 import { CeloContractName, celoRegistryAddress } from '@celo/protocol/lib/registry-utils'
-import { sendTransactionWithPrivateKey } from '@celo/protocol/lib/web3-utils'
 import { Address, eqAddress, NULL_ADDRESS } from '@celo/utils/lib/address'
 import { LocalWallet } from '@celo/wallet-local'
 import { readdirSync, readJsonSync, writeJsonSync } from 'fs-extra'
@@ -265,18 +264,18 @@ module.exports = async (callback: (error?: any) => number) => {
 
     // connection.getAccounts().then(console.log)
 
-    await sendTransactionWithPrivateKey(
-      web3,
-      null,
-      '0x3262cbe4bdd55a27ba11ca4674fc91afe0539f850f3074dc06928c5bf9a0e10d',
-      { to: burnerAddress, amount: '1000000000000000000' }
-    )
+    // await sendTransactionWithPrivateKey(
+    //   web3,
+    //   null,
+    //   '0x3262cbe4bdd55a27ba11ca4674fc91afe0539f850f3074dc06928c5bf9a0e10d',
+    //   { to: burnerAddress, amount: '1000000000000000000' }
+    // )
 
-    // await connection.sendTransaction({
-    //   from: '0x7F871c887e6a430D3c1F434737F568B07559F9E7',
-    //   to: burnerAddress,
-    //   value: '1000000000000000000',
-    // })
+    await connection.sendTransaction({
+      from: '0x7F871c887e6a430D3c1F434737F568B07559F9E7',
+      to: burnerAddress,
+      value: '1000000000000000000',
+    })
 
     web3.eth.personal.defaultAccount = burnerAddress
     web3.eth.defaultAccount = burnerAddress
