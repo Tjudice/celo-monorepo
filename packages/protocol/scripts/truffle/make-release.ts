@@ -269,6 +269,8 @@ module.exports = async (callback: (error?: any) => number) => {
     })
 
     web3.eth.personal.defaultAccount = burnerAddress
+    web3.eth.defaultAccount = burnerAddress
+    argv.from = burnerAddress
 
     // connection.getAccounts().then(console.log)
 
