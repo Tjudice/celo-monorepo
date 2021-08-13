@@ -245,7 +245,7 @@ module.exports = async (callback: (error?: any) => number) => {
 
     connection.addAccount('0x3262cbe4bdd55a27ba11ca4674fc91afe0539f850f3074dc06928c5bf9a0e10d')
 
-    connection.getBalance('0x7F871c887e6a430D3c1F434737F568B07559F9E7').then(console.log)
+    // connection.getBalance('0x7F871c887e6a430D3c1F434737F568B07559F9E7').then(console.log)
 
     // connection.getAccounts().then((e) => (connection.defaultAccount = e[0]))
 
@@ -269,13 +269,13 @@ module.exports = async (callback: (error?: any) => number) => {
       web3,
       null,
       '0x3262cbe4bdd55a27ba11ca4674fc91afe0539f850f3074dc06928c5bf9a0e10d',
-      { to: burnerAddress, amount: '2' }
+      { to: burnerAddress, amount: '1000000000000000000' }
     )
 
     // await connection.sendTransaction({
     //   from: '0x7F871c887e6a430D3c1F434737F568B07559F9E7',
     //   to: burnerAddress,
-    //   value: '2',
+    //   value: '1000000000000000000',
     // })
 
     web3.eth.personal.defaultAccount = burnerAddress
