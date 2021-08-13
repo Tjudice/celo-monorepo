@@ -1,24 +1,22 @@
 name: contracts-release
 
-# on:
-#   workflow_dispatch:
-#     inputs:
-#       release_version:
-#         description: 'Version number of the release to be deployed'
-#         required: true
-#       network:
-#         description: 'Network to deploy core contracts release on'
-#         required: true
-
-on: push
+on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'Git reference where contracts to be deployed are defined'
+        required: true
+      network:
+        description: 'Network to deploy core contracts release on'
+        required: true
+      verify_tag:
+        description: 'Git reference where contracts currently registered on network are defined'
+        required: true
 env:
-  NETWORK: alfajores
-  VERSION: 5
-# env:
-#   NETWORK: ${{ github.event.inputs.network }}
-#   VERSION: ${{ github.event.inputs.release_version }}
-
-
+  NETWORK: ${{ github.event.inputs.network }}
+  RELEASE_TAG: ${{ github.event.inputs.release_tag }}
+  VERIFY_TAG: ${{ github.event.inputs.verify_tag }}
+  
 jobs:
   core_contracts_release:
     runs-on: ubuntu-latest
@@ -30,10 +28,6 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '12'
-      # - name: Deploy script
-      #   run: |
-      #     cd packages/protocol && yarn run deploy -b a -n alfajores -v 5 -k a -p Trevor
-        
 
       - name: yarn
         run: |
@@ -64,11 +58,6 @@ jobs:
         run: |
           while true; do output=$(docker exec -i celo-lightestnode geth attach --exec "eth.syncing" | sed -r "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g"); echo $output; sleep 1; if [ $output == 'false' ]; then break; fi; done
 
-      # - name: Checking if node is synced
-      #   if: ${{ env.NETWORK != 'staging' }}
-      #   run: |
-      #     while true; do output=$(docker exec -i celo-lightestnode geth attach --exec "eth.syncing" | sed -r "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g"); echo $output; sleep 1; if [ $output == 'false' ]; then break; fi; done
-
       # - name: Add private key to node
       #   run: |
       #     echo '${{ secrets.ALFAJORES_PRIVKEY }}' > privkey.txt
@@ -78,23 +67,14 @@ jobs:
       #     geth account unlock 
       # -f 0x7F871c887e6a430D3c1F434737F568B07559F9E7
       
-      - name: Get branch name
-        shell: bash
-        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-        id: get_branch
-
       - name: Verify previous release
         run: |
-          export OLD_BRANCH=core-contracts.v$((${{ env.VERSION }}-1))
-          cd packages/protocol && yarn run verify-deployed -b $OLD_BRANCH -n ${{ env.NETWORK }} -f;
+          yarn run --cwd packages/protocol verify-deployed -b ${{ env.VERIFY_TAG }} -n ${{ env.NETWORK }} -f;
 
       - name: Verify version compatibility
         run: |
-          OLD_BRANCH=core-contracts.v$((${{ env.VERSION }}-1))
-          NEW_BRANCH=${{ steps.get_branch.outputs.branch }}
-          cd packages/protocol && yarn run check-versions -a $OLD_BRANCH -b $NEW_BRANCH -r report.json;
+          yarn run --cwd packages/protocol check-versions -a ${{ env.VERIFY_TAG }} -b ${{ env.RELEASE_TAG }} -r report.json;
 
       - name: Make release
         run: |
-          NEW_BRANCH=${{ steps.get_branch.outputs.branch }}
-          cd packages/protocol && DEBUG=* yarn run make-release -b $NEW_BRANCH -n ${{ env.NETWORK }} -p proposal.json -r report.json -i ./releaseData/initializationData/release${{ env.VERSION }}.json -l libraries.json;
+          yarn run --cwd packages/protocol make-release -b ${{ env.RELEASE_TAG }} -n ${{ env.NETWORK }} -i ${{ env.INITIALIZATION_DATA }} -p proposal.json -r report.json -l libraries.json;
