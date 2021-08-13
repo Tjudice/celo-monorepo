@@ -42,7 +42,7 @@ jobs:
           yarn lerna bootstrap
 
       - name: Build packages
-        run: yarn lerna run build --ignore docs
+        run: yarn --cwd packages/protocol run build
 
       - name: Setup lightest node    
         if: ${{ env.NETWORK != 'staging' }}
@@ -97,4 +97,4 @@ jobs:
       - name: Make release
         run: |
           NEW_BRANCH=${{ steps.get_branch.outputs.branch }}
-          cd packages/protocol && yarn run make-release -b $NEW_BRANCH -n ${{ env.NETWORK }} -p proposal.json -r report.json -i ./releaseData/initializationData/release${{ env.VERSION }}.json -l libraries.json;
+          cd packages/protocol && DEBUG=* yarn run make-release -b $NEW_BRANCH -n ${{ env.NETWORK }} -p proposal.json -r report.json -i ./releaseData/initializationData/release${{ env.VERSION }}.json -l libraries.json;
