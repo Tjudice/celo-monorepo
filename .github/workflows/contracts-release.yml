@@ -42,7 +42,7 @@ jobs:
           yarn lerna bootstrap
 
       - name: Build packages
-        run: yarn --cwd packages/protocol run build
+        run: yarn lerna run build --scope=@celo/protocol --include-filtered-dependencies
 
       - name: Setup lightest node    
         if: ${{ env.NETWORK != 'staging' }}
