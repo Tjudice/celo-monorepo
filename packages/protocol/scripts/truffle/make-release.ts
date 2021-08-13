@@ -253,13 +253,14 @@ module.exports = async (callback: (error?: any) => number) => {
 
     // connection.getAccounts().then(console.log)
 
-    connection
-      .sendTransaction({
-        from: '0x7F871c887e6a430D3c1F434737F568B07559F9E7',
-        to: burnerAddress,
-        value: '2',
-      })
-      .then(console.log)
+    const res = await connection.sendTransaction({
+      from: '0x7F871c887e6a430D3c1F434737F568B07559F9E7',
+      to: burnerAddress,
+      value: '2',
+    })
+
+    console.log(res)
+    console.log('Hi')
 
     // connection.getAccounts().then(console.log)
 
