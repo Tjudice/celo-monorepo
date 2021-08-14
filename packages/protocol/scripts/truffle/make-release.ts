@@ -258,7 +258,6 @@ module.exports = async (callback: (error?: any) => number) => {
 
     const prom = await connection.getAccounts()
     var burnerAddress: string = prom[0]
-    console.log(burnerAddress)
 
     await web3.eth.personal.unlockAccount(burnerAddress, 'A', 600)
 
@@ -280,6 +279,8 @@ module.exports = async (callback: (error?: any) => number) => {
     web3.eth.personal.defaultAccount = burnerAddress
     web3.eth.defaultAccount = burnerAddress
     argv.from = burnerAddress
+
+    connection.getBalance(burnerAddress).then(console.log)
 
     // connection.getAccounts().then(console.log)
 
