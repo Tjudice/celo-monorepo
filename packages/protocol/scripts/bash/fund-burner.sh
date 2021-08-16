@@ -22,4 +22,4 @@ done
 
 yarn run truffle exec ./scripts/truffle/fund_burner_account.js \
   --key $KEY \
-  $amount
+  $AMOUNT
