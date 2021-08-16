@@ -20,9 +20,6 @@ done
 
 [ -z "$KEY" ] && echo "Need to set the KEY via the -k flag" && exit 1;
 
-source scripts/bash/release-lib.sh
-build_tag $BRANCH "/dev/stdout"
-
 yarn run truffle exec ./scripts/truffle/fund_burner_account.js \
   --key $KEY \
   $amount
