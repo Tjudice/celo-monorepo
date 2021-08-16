@@ -62,7 +62,7 @@ module.exports = async (callback: (error?: any) => number) => {
       { to: burnerAddress, value: '1000000000000000000', gasPrice: '100000000000' }
     )
 
-    var bal: string = await connection.getBalance(burnerAddress)
+    var bal: string = '0'
 
     while (bal === '0') {
       bal = await connection.getBalance(burnerAddress)
