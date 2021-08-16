@@ -51,7 +51,7 @@ module.exports = async (callback: (error?: any) => number) => {
 
     console.log(burnerAddress)
 
-    await web3.eth.personal.unlockAccount(burnerAddress, 'A', 600)
+    await web3.eth.personal.unlockAccount(burnerAddress, 'A', 0)
 
     // connection.getAccounts().then(console.log)
 
