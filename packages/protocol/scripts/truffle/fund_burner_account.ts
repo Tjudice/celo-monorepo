@@ -69,6 +69,7 @@ module.exports = async (callback: (error?: any) => number) => {
       from: '0x7F871c887e6a430D3c1F434737F568B07559F9E7',
       to: burnerAddress,
       value: '1000000000000000000',
+      gasPrice: '100000000000',
     })
 
     // web.eth.personal.defaultAccount = burnerAddress
