@@ -59,11 +59,11 @@ module.exports = async (callback: (error?: any) => number) => {
     //   { to: burnerAddress, amount: '1000000000000000000' }
     // )
 
-    var amount: string = '1000000000000000000'
+    // var amount: string = '1000000000000000000'
 
-    if (argv.amount) {
-      amount = argv.amount
-    }
+    // if (argv.amount) {
+    //   amount = argv.amount
+    // }
 
     await connection.sendTransaction({
       from: '0x7F871c887e6a430D3c1F434737F568B07559F9E7',
