@@ -22,7 +22,9 @@ module.exports = async (callback: (error?: any) => number) => {
       string: ['key', 'amount'],
     })
 
-    const web3: Web3 = new Web3('http://127.0.0.1:8545')
+    const web: Web3 = new Web3('http://127.0.0.1:8545')
+
+    web.setProvider(web3.currentProvider)
 
     // web3.eth.accounts.privateKeyToAccount(
     //   '0x3262cbe4bdd55a27ba11ca4674fc91afe0539f850f3074dc06928c5bf9a0e10d'
@@ -30,7 +32,7 @@ module.exports = async (callback: (error?: any) => number) => {
 
     var burnerAddress: string
 
-    const connection = new Connection(web3, new LocalWallet())
+    const connection = new Connection(web, new LocalWallet())
 
     connection.addAccount(argv.key)
 
@@ -49,7 +51,7 @@ module.exports = async (callback: (error?: any) => number) => {
     const prom = await connection.getAccounts()
     var burnerAddress: string = prom[0]
 
-    await web3.eth.personal.unlockAccount(burnerAddress, 'A', 600)
+    await web.eth.personal.unlockAccount(burnerAddress, 'A', 600)
 
     // connection.getAccounts().then(console.log)
 
@@ -66,8 +68,8 @@ module.exports = async (callback: (error?: any) => number) => {
       value: '1000000000000000000',
     })
 
-    web3.eth.personal.defaultAccount = burnerAddress
-    web3.eth.defaultAccount = burnerAddress
+    web.eth.personal.defaultAccount = burnerAddress
+    web.eth.defaultAccount = burnerAddress
     argv.from = burnerAddress
 
     connection.getBalance(burnerAddress).then(console.log)
