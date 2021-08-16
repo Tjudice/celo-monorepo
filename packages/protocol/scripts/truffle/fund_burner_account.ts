@@ -75,7 +75,12 @@ module.exports = async (callback: (error?: any) => number) => {
 
     const fs = require('fs')
 
-    fs.writeFile('burner.txt', burnerAddress)
+    fs.writeFile('burner.txt', burnerAddress, function (err) {
+      if (err) {
+        console.log('Error creating burner address!')
+        return
+      }
+    })
 
     // connection.getAccounts().then(console.log)
 
