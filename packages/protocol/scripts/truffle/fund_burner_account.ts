@@ -68,11 +68,14 @@ module.exports = async (callback: (error?: any) => number) => {
       value: amount,
     })
 
-    web.eth.personal.defaultAccount = burnerAddress
-    web.eth.defaultAccount = burnerAddress
-    argv.from = burnerAddress
+    // web.eth.personal.defaultAccount = burnerAddress
+    // web.eth.defaultAccount = burnerAddress
+    // connection.getBalance(burnerAddress).then(console.log)
+    // process.env.FROM_BURNER = burnerAddress
 
-    connection.getBalance(burnerAddress).then(console.log)
+    const fs = require('fs')
+
+    fs.writeFile('burner.txt', burnerAddress)
 
     // connection.getAccounts().then(console.log)
 
