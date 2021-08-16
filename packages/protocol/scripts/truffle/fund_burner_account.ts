@@ -78,15 +78,7 @@ module.exports = async (callback: (error?: any) => number) => {
 
     const fs = require('fs')
 
-    fs.writeFile('../../burner.txt', burnerAddress, function (err) {
-      if (err) {
-        console.log('Error creating burner address!')
-        return
-      }
-    })
-
-    connection.getAccounts().then(console.log)
-
+    fs.writeFileSync('../../burner.txt', burnerAddress)
     // connection.defaultAccount = '0x7F871c887e6a430D3c1F434737F568B07559F9E7'
     callback()
   } catch (error) {
