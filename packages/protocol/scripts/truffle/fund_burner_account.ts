@@ -21,7 +21,7 @@ module.exports = async (callback: (error?: any) => number) => {
 
     console.log(argv.key)
 
-    const web: Web3 = new Web3('http://127.0.0.1:8545')
+    const web3: Web3 = new Web3('http://127.0.0.1:8545')
 
     // web3.eth.accounts.privateKeyToAccount(
     //   '0x3262cbe4bdd55a27ba11ca4674fc91afe0539f850f3074dc06928c5bf9a0e10d'
@@ -29,7 +29,7 @@ module.exports = async (callback: (error?: any) => number) => {
 
     var burnerAddress: string
 
-    const connection = new Connection(web, new LocalWallet())
+    const connection = new Connection(web3, new LocalWallet())
 
     connection.addAccount('0x3262cbe4bdd55a27ba11ca4674fc91afe0539f850f3074dc06928c5bf9a0e10d')
 
@@ -51,7 +51,7 @@ module.exports = async (callback: (error?: any) => number) => {
 
     console.log(burnerAddress)
 
-    await web.eth.personal.unlockAccount(burnerAddress, 'A', 600)
+    await web3.eth.personal.unlockAccount(burnerAddress, 'A', 600)
 
     // connection.getAccounts().then(console.log)
 
