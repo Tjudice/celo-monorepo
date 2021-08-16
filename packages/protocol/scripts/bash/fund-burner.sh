@@ -13,9 +13,9 @@ NETWORK=""
 KEY=""
 AMOUNT=""
 
-while getopts 'k:a:' flag; do
+while getopts 'n:k:a:' flag; do
   case "${flag}" in
-    n) NETWORK = "${OPTARG}" ;;
+    n) NETWORK="${OPTARG}" ;;
     k) KEY="${OPTARG}" ;;
     a) AMOUNT="--amount ${OPTARG}" ;;
     *) error "Unexpected option ${flag}" ;;
