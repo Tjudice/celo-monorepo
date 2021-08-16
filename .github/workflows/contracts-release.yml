@@ -77,7 +77,9 @@ jobs:
       #     rm privkey.txt
       #     geth account unlock 
       # -f 0x7F871c887e6a430D3c1F434737F568B07559F9E7
-      
+      - name: Fund burner account
+        run: |
+          cd packages/protocol && yarn run fund-burner -k ${{ secrets.ALFAJORES_KEY }}
       - name: Get branch name
         shell: bash
         run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"

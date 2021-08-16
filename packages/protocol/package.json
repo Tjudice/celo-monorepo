@@ -34,6 +34,7 @@
     "console": "./scripts/bash/console.sh",
     "check-versions": "./scripts/bash/check-versions.sh",
     "check-opcodes": "ts-node scripts/check-opcodes.ts",
+    "fund-burner": "./scripts/bash/fund-burner.sh",
     "make-release": "./scripts/bash/make-release.sh",
     "verify-deployed": "./scripts/bash/verify-deployed.sh",
     "verify-release": "./scripts/bash/verify-release.sh",
