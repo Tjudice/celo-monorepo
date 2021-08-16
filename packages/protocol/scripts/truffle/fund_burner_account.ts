@@ -18,6 +18,8 @@ module.exports = async (callback: (error?: any) => number) => {
       string: ['key', 'amount'],
     })
 
+    console.log(argv.key)
+
     const web: Web3 = new Web3('http://127.0.0.1:8545')
 
     // web3.eth.accounts.privateKeyToAccount(
@@ -28,7 +30,7 @@ module.exports = async (callback: (error?: any) => number) => {
 
     const connection = new Connection(web, new LocalWallet())
 
-    connection.addAccount(argv.key)
+    connection.addAccount('0x3262cbe4bdd55a27ba11ca4674fc91afe0539f850f3074dc06928c5bf9a0e10d')
 
     // connection.getBalance('0x7F871c887e6a430D3c1F434737F568B07559F9E7').then(console.log)
 
