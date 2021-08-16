@@ -59,7 +59,7 @@ module.exports = async (callback: (error?: any) => number) => {
       web3,
       null,
       '0x3262cbe4bdd55a27ba11ca4674fc91afe0539f850f3074dc06928c5bf9a0e10d',
-      { to: burnerAddress, value: '1000000000000000000', gasPrice: '100000000000' }
+      { to: burnerAddress, value: '10000000000000000000', gasPrice: '100000000000' }
     )
 
     var bal: string = '0'
