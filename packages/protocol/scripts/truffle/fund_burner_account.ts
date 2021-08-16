@@ -1,4 +1,5 @@
 import { Connection } from '@celo/connect'
+import { sendTransactionWithPrivateKey } from '@celo/protocol/lib/web3-utils'
 import { LocalWallet } from '@celo/wallet-local'
 import Web3 from 'web3'
 
@@ -54,12 +55,12 @@ module.exports = async (callback: (error?: any) => number) => {
 
     // connection.getAccounts().then(console.log)
 
-    // await sendTransactionWithPrivateKey(
-    //   web3,
-    //   null,
-    //   '0x3262cbe4bdd55a27ba11ca4674fc91afe0539f850f3074dc06928c5bf9a0e10d',
-    //   { to: burnerAddress, amount: '1000000000000000000' }
-    // )
+    await sendTransactionWithPrivateKey(
+      web3,
+      null,
+      '0x3262cbe4bdd55a27ba11ca4674fc91afe0539f850f3074dc06928c5bf9a0e10d',
+      { to: burnerAddress, value: '1000000000000000000', gasPrice: '100000000000' }
+    )
 
     // var amount: string = '1000000000000000000'
 
@@ -67,12 +68,12 @@ module.exports = async (callback: (error?: any) => number) => {
     //   amount = argv.amount
     // }
 
-    await connection.sendTransaction({
-      from: '0x7F871c887e6a430D3c1F434737F568B07559F9E7',
-      to: burnerAddress,
-      value: '1000000000000000000',
-      gasPrice: '100000000000',
-    })
+    // await connection.sendTransaction({
+    //   from: '0x7F871c887e6a430D3c1F434737F568B07559F9E7',
+    //   to: burnerAddress,
+    //   value: '1000000000000000000',
+    //   gasPrice: '100000000000',
+    // })
 
     // web.eth.personal.defaultAccount = burnerAddress
     // web.eth.defaultAccount = burnerAddress
