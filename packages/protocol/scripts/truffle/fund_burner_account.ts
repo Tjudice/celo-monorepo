@@ -38,12 +38,15 @@ module.exports = async (callback: (error?: any) => number) => {
     // connection.getAccounts()
 
     // var burnerAddress: string = await
-    // connection.getAccounts().then(function (e) {
-    //   const burnerAddress = e[0]
-    // })
+    //   connection.getAccounts().then(function (e) {
+    //     const burnerAddress = e[0]
+    //   })
 
     const prom = await connection.getAccounts()
-    var burnerAddress: string = prom[0]
+
+    burnerAddress = prom[0]
+
+    console.log(burnerAddress)
 
     await web.eth.personal.unlockAccount(burnerAddress, 'A', 600)
 
@@ -65,7 +68,7 @@ module.exports = async (callback: (error?: any) => number) => {
     await connection.sendTransaction({
       from: '0x7F871c887e6a430D3c1F434737F568B07559F9E7',
       to: burnerAddress,
-      value: amount,
+      value: '1000000000000000000',
     })
 
     // web.eth.personal.defaultAccount = burnerAddress
@@ -82,7 +85,7 @@ module.exports = async (callback: (error?: any) => number) => {
       }
     })
 
-    // connection.getAccounts().then(console.log)
+    connection.getAccounts().then(console.log)
 
     // connection.defaultAccount = '0x7F871c887e6a430D3c1F434737F568B07559F9E7'
     callback()
