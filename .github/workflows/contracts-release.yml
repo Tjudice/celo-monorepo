@@ -11,10 +11,10 @@ on:
         required: true
 
 # on: push
-# env:
+# args:
 #   NETWORK: alfajores
 #   VERSION: 5
-env:
+args:
   NETWORK: ${{ github.event.inputs.network }}
   VERSION: ${{ github.event.inputs.release_version }}
 
@@ -44,7 +44,7 @@ jobs:
 
 
       - name: Setup Cloud SDK
-        if: ${{ env.NETWORK == 'staging' }}
+        if: ${{ args.NETWORK == 'staging' }}
         uses: google-github-actions/setup-gcloud@master
         with:
           project_id: 'celo-testnet'
@@ -52,7 +52,7 @@ jobs:
           export_default_credentials: true
 
       - name: Setup port-forward
-        if: ${{ env.NETWORK == 'staging' }}
+        if: ${{ args.NETWORK == 'staging' }}
         run: |
           gcloud container clusters get-credentials celo-networks-dev --project celo-testnet --zone us-west1-a
           kubectl config set-context --current --namespace default
@@ -60,13 +60,13 @@ jobs:
           sleep 10
 
       - name: Setup lightest node    
-        if: ${{ env.NETWORK != 'staging' }}
+        if: ${{ args.NETWORK != 'staging' }}
         run: |
-          export CELO_IMAGE=us.gcr.io/celo-org/geth:${{ env.NETWORK }}
+          export CELO_IMAGE=us.gcr.io/celo-org/geth:${{ args.NETWORK }}
           docker pull $CELO_IMAGE
           mkdir celo-data-dir
           cd celo-data-dir
-          export NETWORK_OPTION="--${{ env.NETWORK }}"
+          export NETWORK_OPTION="--${{ args.NETWORK }}"
           Create account on docker, setup full node
           docker run --name celo-lightestnode -d --restart unless-stopped --stop-timeout 300 -p 127.0.0.1:8545:8545 -p 127.0.0.1:8546:8546 -p 30303:30303 -p 30303:30303/udp -v $PWD:/root/.celo $CELO_IMAGE --verbosity 3 --syncmode lightest --rpc --allow-insecure-unlock --rpcaddr 0.0.0.0 --rpcapi eth,net,web3,debug,admin,personal --light.serve 90 --light.maxpeers 1000 --maxpeers 1100 --nousb $NETWORK_OPTION --datadir /root/.celo
           CONT_ID=$(docker inspect --format="{{.Id}}" celo-lightestnode)
@@ -76,13 +76,13 @@ jobs:
           cd ..
       
       - name: Checking if node is synced
-        if: ${{ env.NETWORK != 'staging' }}
+        if: ${{ args.NETWORK != 'staging' }}
         run: |
           while true; do output=$(docker exec -i celo-lightestnode geth attach --exec "eth.syncing" | sed -r "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g"); echo $output; sleep 1; if [ $output == 'false' ]; then break; fi; done
 
       - name: Fund burner account
         run: |
-          cd packages/protocol && DEBUG=* yarn run fund-burner -n ${{ env.NETWORK}} -k ${{ secrets.ALFAJORES_PRIVKEY }}
+          cd packages/protocol && DEBUG=* yarn run fund-burner -n ${{ args.NETWORK}} -k ${{ secrets.ALFAJORES_PRIVKEY }}
 
       - name: Get branch name
         shell: bash
@@ -91,12 +91,12 @@ jobs:
 
       - name: Verify previous release
         run: |
-          export OLD_BRANCH=core-contracts.v$((${{ env.VERSION }}-1))
-          cd packages/protocol && yarn run verify-deployed -b $OLD_BRANCH -n ${{ env.NETWORK }} -f;
+          export OLD_BRANCH=core-contracts.v$((${{ args.VERSION }}-1))
+          cd packages/protocol && yarn run verify-deployed -b $OLD_BRANCH -n ${{ args.NETWORK }} -f;
 
       - name: Verify version compatibility
         run: |
-          OLD_BRANCH=core-contracts.v$((${{ env.VERSION }}-1))
+          OLD_BRANCH=core-contracts.v$((${{ args.VERSION }}-1))
           NEW_BRANCH=${{ steps.get_branch.outputs.branch }}
           cd packages/protocol && yarn run check-versions -a $OLD_BRANCH -b $NEW_BRANCH -r report.json;
 
@@ -104,9 +104,9 @@ jobs:
         run: |
           FROM=$(cat burner.txt)
           NEW_BRANCH=${{ steps.get_branch.outputs.branch }}
-          cd packages/protocol && DEBUG=* yarn run make-release -b $NEW_BRANCH -n ${{ env.NETWORK }} -f $FROM -p proposal.json -r report.json -i ./releaseData/initializationData/release${{ env.VERSION }}.json -l libraries.json;
+          cd packages/protocol && DEBUG=* yarn run make-release -b $NEW_BRANCH -n ${{ args.NETWORK }} -f $FROM -p proposal.json -r report.json -i ./releaseData/initializationData/release${{ args.VERSION }}.json -l libraries.json;
 
       # - name: Verify release
       #   run: |
       #     NEW_BRANCH=${{ steps.get_branch.outputs.branch }}
-      #     cd packages/protocol && yarn run verify-release -b $NEW_BRANCH -n ${{ env.NETWORK }} -p proposal.json -i ./releaseData/initializationData/release${{ env.VERSION }}.json
+      #     cd packages/protocol && yarn run verify-release -b $NEW_BRANCH -n ${{ args.NETWORK }} -p proposal.json -i ./releaseData/initializationData/release${{ args.VERSION }}.json
