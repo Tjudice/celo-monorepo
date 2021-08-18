@@ -33,8 +33,6 @@ jobs:
       # - name: Deploy script
       #   run: |
       #     cd packages/protocol && yarn run deploy -b a -n alfajores -v 5 -k a -p Trevor
-        
-
       - name: yarn
         run: |
           npm install --global yarn
@@ -44,6 +42,23 @@ jobs:
       - name: Build packages
         run: yarn lerna run build --ignore docs
 
+
+      - name: Setup Cloud SDK
+        if: ${{ env.NETWORK == 'staging' }}
+        uses: google-github-actions/setup-gcloud@master
+        with:
+          project_id: 'celo-testnet'
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
+
+      - name: Setup port-forward
+        if: ${{ env.NETWORK == 'staging' }}
+        run: |
+          gcloud container clusters get-credentials celo-networks-dev --project celo-testnet --zone us-west1-a
+          kubectl config set-context --current --namespace default
+          kubectl port-forward --namespace=staging staging-validators-0 8545:8545 &
+          sleep 10
+
       - name: Setup lightest node    
         if: ${{ env.NETWORK != 'staging' }}
         run: |
@@ -52,6 +67,7 @@ jobs:
           mkdir celo-data-dir
           cd celo-data-dir
           export NETWORK_OPTION="--${{ env.NETWORK }}"
+          Create account on docker, setup full node
           docker run --name celo-lightestnode -d --restart unless-stopped --stop-timeout 300 -p 127.0.0.1:8545:8545 -p 127.0.0.1:8546:8546 -p 30303:30303 -p 30303:30303/udp -v $PWD:/root/.celo $CELO_IMAGE --verbosity 3 --syncmode lightest --rpc --allow-insecure-unlock --rpcaddr 0.0.0.0 --rpcapi eth,net,web3,debug,admin,personal --light.serve 90 --light.maxpeers 1000 --maxpeers 1100 --nousb $NETWORK_OPTION --datadir /root/.celo
           CONT_ID=$(docker inspect --format="{{.Id}}" celo-lightestnode)
           echo -n 'A' > secret.txt
@@ -64,19 +80,6 @@ jobs:
         run: |
           while true; do output=$(docker exec -i celo-lightestnode geth attach --exec "eth.syncing" | sed -r "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g"); echo $output; sleep 1; if [ $output == 'false' ]; then break; fi; done
 
-      # - name: Checking if node is synced
-      #   if: ${{ env.NETWORK != 'staging' }}
-      #   run: |
-      #     while true; do output=$(docker exec -i celo-lightestnode geth attach --exec "eth.syncing" | sed -r "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g"); echo $output; sleep 1; if [ $output == 'false' ]; then break; fi; done
-
-      # - name: Add private key to node
-      #   run: |
-      #     echo '${{ secrets.ALFAJORES_PRIVKEY }}' > privkey.txt
-      #     echo '${{ secrets.PW }}' > password.txt
-      #     geth account import --password password.txt privkey.txt
-      #     rm privkey.txt
-      #     geth account unlock 
-      # -f 0x7F871c887e6a430D3c1F434737F568B07559F9E7
       - name: Fund burner account
         run: |
           cd packages/protocol && DEBUG=* yarn run fund-burner -n ${{ env.NETWORK}} -k ${{ secrets.ALFAJORES_PRIVKEY }}
@@ -103,7 +106,7 @@ jobs:
           NEW_BRANCH=${{ steps.get_branch.outputs.branch }}
           cd packages/protocol && DEBUG=* yarn run make-release -b $NEW_BRANCH -n ${{ env.NETWORK }} -f $FROM -p proposal.json -r report.json -i ./releaseData/initializationData/release${{ env.VERSION }}.json -l libraries.json;
 
-      - name: Verify version compatibility
-        run: |
-          NEW_BRANCH=${{ steps.get_branch.outputs.branch }}
-          cd packages/protocol && yarn run verify-release -b $NEW_BRANCH -n ${{ env.NETWORK }} -p proposal.json -i ./releaseData/initializationData/release${{ env.VERSION }}.json
+      # - name: Verify release
+      #   run: |
+      #     NEW_BRANCH=${{ steps.get_branch.outputs.branch }}
+      #     cd packages/protocol && yarn run verify-release -b $NEW_BRANCH -n ${{ env.NETWORK }} -p proposal.json -i ./releaseData/initializationData/release${{ env.VERSION }}.json
