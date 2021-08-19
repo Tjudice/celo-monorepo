@@ -90,6 +90,7 @@ jobs:
           cd packages/protocol && DEBUG=* yarn run fund-burner -n ${{ env.NETWORK }}
      
       - name: Fund burner account
+        if: ${{ env.NETWORK != 'staging' }}
         run: |
           cd packages/protocol && DEBUG=* yarn run fund-burner -n ${{ env.NETWORK}} -k ${{ secrets.ALFAJORES_PRIVKEY }}
       
