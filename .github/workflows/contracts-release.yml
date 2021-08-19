@@ -41,8 +41,10 @@ jobs:
 
       - name: Build packages
         run: yarn lerna run build --ignore docs
-
-
+      
+      - name: Setup celotool
+        run: |
+          alias  celotooljs=packages/celotool/bin/celotooljs.sh
       - name: Setup Cloud SDK
         if: ${{ env.NETWORK == 'staging' }}
         uses: google-github-actions/setup-gcloud@master
