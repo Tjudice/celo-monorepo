@@ -87,7 +87,7 @@ jobs:
         run: |
           echo -n 'A' > secret.txt
           ./packages/celotool/bin/celotooljs.sh geth account new --password secret.txt
-          cd packages/protocol && DEBUG=* yarn run fund-staging-burner -n ${{ env.NETWORK }} -k ${{ secrets.ALFAJORES_PRIVKEY }}
+          cd packages/protocol && DEBUG=* yarn run fund-burner -n ${{ env.NETWORK }} -k ${{ secrets.ALFAJORES_PRIVKEY }}
      
       - name: Fund burner account
         run: |

@@ -28,25 +28,27 @@ module.exports = async (callback: (error?: any) => number) => {
     const accounts = await connection.getAccounts()
     burnerAddress = accounts[accounts.length - 1]
 
-    connection.addAccount(argv.key)
+    if (argv[0] != 'staging') {
+      connection.addAccount(argv.key)
 
-    await web3.eth.personal.unlockAccount(burnerAddress, 'A', 0, function (err) {
-      if (err) {
-        console.log('Error accessing burner address!')
-      }
-    })
+      await web3.eth.personal.unlockAccount(burnerAddress, 'A', 0, function (err) {
+        if (err) {
+          console.log('Error accessing burner address!')
+        }
+      })
 
-    //Send transaction from secure local wallet to burner account on node
-    await sendTransactionWithPrivateKey(
-      web3,
-      null,
-      '0x3262cbe4bdd55a27ba11ca4674fc91afe0539f850f3074dc06928c5bf9a0e10d',
-      {
-        to: burnerAddress,
-        value: '10000000000000000000',
-        gasPrice: '100000000000',
-      }
-    )
+      //Send transaction from secure local wallet to burner account on node
+      await sendTransactionWithPrivateKey(
+        web3,
+        null,
+        '0x3262cbe4bdd55a27ba11ca4674fc91afe0539f850f3074dc06928c5bf9a0e10d',
+        {
+          to: burnerAddress,
+          value: '10000000000000000000',
+          gasPrice: '100000000000',
+        }
+      )
+    }
 
     //Save address of burner account in text file so it can be passed to make-release.sh as input
     const fs = require('fs')
