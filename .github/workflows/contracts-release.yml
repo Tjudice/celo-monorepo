@@ -85,11 +85,12 @@ jobs:
         run: |
           echo -n 'A' > secret.txt
           celotooljs geth account new --password secret.txt
-
+          cd packages/protocol && DEBUG=* yarn run fund-burner -n ${{ args.NETWORK }} -k ${{ secrets.ALFAJORES_PRIVKEY }}
+     
       - name: Fund burner account
         run: |
           cd packages/protocol && DEBUG=* yarn run fund-burner -n ${{ args.NETWORK}} -k ${{ secrets.ALFAJORES_PRIVKEY }}
-
+      
       - name: Get branch name
         shell: bash
         run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
