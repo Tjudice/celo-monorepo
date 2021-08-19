@@ -46,7 +46,10 @@ jobs:
         run: |
           pwd
           ls
-          alias  celotooljs=packages/celotool/bin/celotooljs.sh
+          alias  celotooljs=/home/runner/work/celo-monorepo/packages/celotool/bin/celotooljs.sh
+          cd ..
+          ls
+          cd celo-monorepo
       - name: Setup Cloud SDK
         if: ${{ env.NETWORK == 'staging' }}
         uses: google-github-actions/setup-gcloud@master
