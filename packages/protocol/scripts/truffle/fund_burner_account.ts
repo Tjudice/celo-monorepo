@@ -28,7 +28,7 @@ module.exports = async (callback: (error?: any) => number) => {
     const accounts = await connection.getAccounts()
     burnerAddress = accounts[accounts.length - 1]
 
-    if (argv[0] != 'staging') {
+    if (argv.key) {
       connection.addAccount(argv.key)
 
       await web3.eth.personal.unlockAccount(burnerAddress, 'A', 0, function (err) {
