@@ -45,6 +45,7 @@ jobs:
       - name: Setup celotool
         run: |
           pwd
+          ls
           alias  celotooljs=packages/celotool/bin/celotooljs.sh
       - name: Setup Cloud SDK
         if: ${{ env.NETWORK == 'staging' }}
