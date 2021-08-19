@@ -88,6 +88,8 @@ jobs:
           echo -n 'A' > secret.txt
           ./packages/celotool/bin/celotooljs.sh geth account new --password secret.txt
           cd packages/protocol && DEBUG=* yarn run fund-burner -n ${{ env.NETWORK }}
+          FROM=$(cat burner.txt)
+          ./packages/celotool/bin/celotooljs.sh geth --unlock $FROM --password A
      
       - name: Fund burner account
         if: ${{ env.NETWORK != 'staging' }}
@@ -102,7 +104,7 @@ jobs:
       - name: Verify previous release
         run: |
           export OLD_BRANCH=core-contracts.v$((${{ env.VERSION }}-1))
-          cd packages/protocol && yarn run verify-deployed -b $OLD_BRANCH -n ${{ env.NETWORK }} -f;
+          cd packages/protocol && yarn run verify-deployed -b $OLD_BRANCH -n ${{ env.NETWORK }};
 
       - name: Verify version compatibility
         run: |
