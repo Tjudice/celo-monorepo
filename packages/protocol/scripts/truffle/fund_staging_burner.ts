@@ -18,6 +18,8 @@ module.exports = async (callback: (error?: any) => number) => {
       string: ['key', 'amount'],
     })
 
+    console.log(argv.key)
+
     //Use connection to send transactions from local, secure wallet to unsecure address on node
     const web3: Web3 = new Web3('http://127.0.0.1:8545')
     const connection = new Connection(web3, new LocalWallet())
