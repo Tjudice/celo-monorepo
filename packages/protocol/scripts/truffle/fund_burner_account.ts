@@ -22,12 +22,13 @@ module.exports = async (callback: (error?: any) => number) => {
     //Use connection to send transactions from local, secure wallet to unsecure address on node
     const web3: Web3 = new Web3('http://127.0.0.1:8545')
     const connection = new Connection(web3, new LocalWallet())
-    connection.addAccount(argv.key)
 
     //Get the address of and unlock burner account created in contracts-release.yml
     var burnerAddress: string
     const accounts = await connection.getAccounts()
-    burnerAddress = accounts[0]
+    burnerAddress = accounts[accounts.length - 1]
+
+    connection.addAccount(argv.key)
 
     await web3.eth.personal.unlockAccount(burnerAddress, 'A', 0, function (err) {
       if (err) {
