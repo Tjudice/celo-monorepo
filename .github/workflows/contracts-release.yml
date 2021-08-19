@@ -88,6 +88,7 @@ jobs:
           echo -n 'A' > secret.txt
           ./packages/celotool/bin/celotooljs.sh geth account new --password secret.txt
           cd packages/protocol && DEBUG=* yarn run fund-burner -n ${{ env.NETWORK }}
+          cd ../..
           FROM=$(cat burner.txt)
           ./packages/celotool/bin/celotooljs.sh geth --unlock $FROM --password A
      
