@@ -25,14 +25,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          fetch-depth: 0 # all history
+          fetch-depth: 0 
 
       - uses: actions/setup-node@v2
         with:
           node-version: '12'
-      # - name: Deploy script
-      #   run: |
-      #     cd packages/protocol && yarn run deploy -b a -n alfajores -v 5 -k a -p Trevor
+
       - name: yarn
         run: |
           npm install --global yarn
@@ -46,10 +44,11 @@ jobs:
         run: |
           pwd
           ls
-          alias  celotooljs=/home/runner/work/celo-monorepo/packages/celotool/bin/celotooljs.sh
+          alias  celotooljs=/home/runner/work/celo-monorepo/celo-monorepo/packages/celotool/bin/celotooljs.sh
           cd ..
           ls
           cd celo-monorepo
+
       - name: Setup Cloud SDK
         if: ${{ env.NETWORK == 'staging' }}
         uses: google-github-actions/setup-gcloud@master
@@ -119,8 +118,3 @@ jobs:
           FROM=$(cat burner.txt)
           NEW_BRANCH=${{ steps.get_branch.outputs.branch }}
           cd packages/protocol && DEBUG=* yarn run make-release -b $NEW_BRANCH -n ${{ env.NETWORK }} -f $FROM -p proposal.json -r report.json -i ./releaseData/initializationData/release${{ env.VERSION }}.json -l libraries.json;
-
-      # - name: Verify release
-      #   run: |
-      #     NEW_BRANCH=${{ steps.get_branch.outputs.branch }}
-      #     cd packages/protocol && yarn run verify-release -b $NEW_BRANCH -n ${{ env.NETWORK }} -p proposal.json -i ./releaseData/initializationData/release${{ env.VERSION }}.json
