@@ -42,12 +42,8 @@ jobs:
       
       - name: Setup celotool
         run: |
-          pwd
-          ls
           alias  celotooljs=/home/runner/work/celo-monorepo/celo-monorepo/packages/celotool/bin/celotooljs.sh
-          cd ..
-          ls
-          cd celo-monorepo
+
 
       - name: Setup Cloud SDK
         if: ${{ env.NETWORK == 'staging' }}
@@ -90,7 +86,7 @@ jobs:
         if: ${{ env.NETWORK == 'staging' }}
         run: |
           echo -n 'A' > secret.txt
-          celotooljs geth account new --password secret.txt
+          ./home/runner/work/celo-monorepo/celo-monorepo/packages/celotool/bin/celotooljs.sh geth account new --password secret.txt
           cd packages/protocol && DEBUG=* yarn run fund-burner -n ${{ env.NETWORK }} -k ${{ secrets.ALFAJORES_PRIVKEY }}
      
       - name: Fund burner account
