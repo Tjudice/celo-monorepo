@@ -23,7 +23,6 @@ while getopts 'n:k:a:' flag; do
 done
 
 [ -z "$NETWORK" ] && echo "Need to set the NETWORK via the -n flag" && exit 1;
-[ -z "$KEY" ] && echo "Need to set the KEY via the -k flag" && exit 1;
 
 yarn run truffle exec ./scripts/truffle/fund_burner_account.js \
   --network $NETWORK \
