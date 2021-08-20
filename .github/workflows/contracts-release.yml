@@ -90,7 +90,9 @@ jobs:
           echo -n 'A' > secret.txt
           geth account new --password secret.txt
           cd packages/protocol && DEBUG=* yarn run fund-burner -n ${{ env.NETWORK }}
-
+          cd ../..
+          FROM=$(cat burner.txt)
+          geth --unlock $FROM --password secret.txt
 
       # - name: Test
           # mkdir celo-data-dir
