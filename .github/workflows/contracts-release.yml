@@ -88,12 +88,12 @@ jobs:
           echo -n 'A' > secret.txt
           mkdir celo-data-dir
           cd celo-data-dir
-          ./packages/celotool/bin/celotooljs.sh geth init --celo-env celo-testnet --datadir /root/.celo --geth-dir /root/.celo 
+          ./../packages/celotool/bin/celotooljs.sh geth init --celo-env celo-testnet --datadir $PWD:/root/.celo --geth-dir /root/.celo 
           ./packages/celotool/bin/celotooljs.sh geth create-account --celo-env celo-testnet --datadir /root/.celo 
           cd packages/protocol && DEBUG=* yarn run fund-burner -n ${{ env.NETWORK }}
           cd ../..
           FROM=$(cat burner.txt)
-          ./packages/celotool/bin/celotooljs.sh geth create-account --celo-env celo-testnet --datadir /root/.celo
+          ./packages/celotool/bin/celotooljs.sh geth create-account --celo-env celo-testnet --datadir $PWD:/root/.celo
      
       - name: Fund burner account
         if: ${{ env.NETWORK != 'staging' }}
