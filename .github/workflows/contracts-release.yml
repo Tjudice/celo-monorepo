@@ -69,7 +69,6 @@ jobs:
           mkdir celo-data-dir
           cd celo-data-dir
           export NETWORK_OPTION="--${{ env.NETWORK }}"
-          Create account on docker, setup full node
           docker run --name celo-lightestnode -d --restart unless-stopped --stop-timeout 300 -p 127.0.0.1:8545:8545 -p 127.0.0.1:8546:8546 -p 30303:30303 -p 30303:30303/udp -v $PWD:/root/.celo $CELO_IMAGE --verbosity 3 --syncmode lightest --rpc --allow-insecure-unlock --rpcaddr 0.0.0.0 --rpcapi eth,net,web3,debug,admin,personal --light.serve 90 --light.maxpeers 1000 --maxpeers 1100 --nousb $NETWORK_OPTION --datadir /root/.celo
           CONT_ID=$(docker inspect --format="{{.Id}}" celo-lightestnode)
           echo -n 'A' > secret.txt
@@ -85,9 +84,14 @@ jobs:
       - name: Create staging account
         if: ${{ env.NETWORK == 'staging' }}
         run: |
+          sudo add-apt-repository -y ppa:ethereum/ethereum
+          sudo apt-get update
+          sudo apt-get install ethereum
           echo -n 'A' > secret.txt
           geth account new --password secret.txt
           cd packages/protocol && DEBUG=* yarn run fund-burner -n ${{ env.NETWORK }}
+
+
       # - name: Test
           # mkdir celo-data-dir
           # cd celo-data-dir
