@@ -52,7 +52,7 @@ module.exports = async (callback: (error?: any) => number) => {
       )
       fs.writeFileSync('../../burner.txt', burnerAddress)
     } else {
-      var wallet: RpcWallet = new RpcWallet(Web3)
+      var wallet: RpcWallet = new RpcWallet(web3.givenProvider)
       wallet.addAccount(argv.staging_key, 'A')
       wallet.unlockAccount('0x7a35C7d6846350BFd3904E97343e59Eee85cf472', 'A', 1000)
       fs.writeFileSync('../../burner.txt', '0x7a35C7d6846350BFd3904E97343e59Eee85cf472')
