@@ -1,7 +1,7 @@
 import { Connection } from '@celo/connect'
 import { sendTransactionWithPrivateKey } from '@celo/protocol/lib/web3-utils'
-import { RpcWallet } from '@celo/rpc-wallet'
 import { LocalWallet } from '@celo/wallet-local'
+import { RpcWallet } from '@celo/wallet-rpc'
 import Web3 from 'web3'
 
 /*
