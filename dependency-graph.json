@@ -91,7 +91,8 @@
       "@celo/connect",
       "@celo/flake-tracker",
       "@celo/typescript",
-      "@celo/utils"
+      "@celo/utils",
+      "@celo/wallet-rpc"
     ]
   },
   "@celo/typescript": {
