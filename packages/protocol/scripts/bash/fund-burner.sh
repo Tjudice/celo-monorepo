@@ -26,7 +26,7 @@ done
 
 
 
-yarn ts-node scripts/fund_burner_account.ts --network $NETWORK $KEY $STAGINGKEY
+yarn ts-node ../../scripts/fund_burner_account.ts --network $NETWORK $KEY $STAGINGKEY
 # yarn run truffle exec ./../../scripts/fund_burner_account.js \
 #   --network $NETWORK \
 #   $KEY \
