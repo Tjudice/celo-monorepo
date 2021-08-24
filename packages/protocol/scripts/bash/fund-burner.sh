@@ -11,20 +11,20 @@ set -euo pipefail
 
 NETWORK=""
 KEY=""
-AMOUNT=""
+STAGINGKEY=""
 
 while getopts 'n:k:a:' flag; do
   case "${flag}" in
     n) NETWORK="${OPTARG}" ;;
-    k) KEY="${OPTARG}" ;;
-    a) AMOUNT="--amount ${OPTARG}" ;;
+    k) KEY="--key ${OPTARG}" ;;
+    s) STAGINGKEY="--staging_key ${OPTARG}" ;;
     *) error "Unexpected option ${flag}" ;;
   esac
 done
 
 [ -z "$NETWORK" ] && echo "Need to set the NETWORK via the -n flag" && exit 1;
 
-yarn run truffle exec ./scripts/truffle/fund_burner_account.js \
+yarn run truffle exec ./../../scripts/fund_burner_account.js \
   --network $NETWORK \
-  --key $KEY \
-  $AMOUNT
+  $KEY \
+  $STAGINGKEY
