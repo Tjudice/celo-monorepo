@@ -10,10 +10,6 @@ on:
         description: 'Network to deploy core contracts release on'
         required: true
 
-# on: push
-# env:
-#   NETWORK: alfajores
-#   VERSION: 5
 env:
   NETWORK: ${{ github.event.inputs.network }}
   VERSION: ${{ github.event.inputs.release_version }}
@@ -38,11 +34,11 @@ jobs:
           yarn lerna bootstrap
 
       - name: Build packages
-        run: yarn lerna run build --ignore docs
+        run: yarn build --ignore docs
       
       - name: Setup celotool
         run: |
-          alias  celotooljs=/home/runner/work/celo-monorepo/celo-monorepo/packages/celotool/bin/celotooljs.sh
+          alias celotooljs=/home/runner/work/celo-monorepo/celo-monorepo/packages/celotool/bin/celotooljs.sh
 
 
       - name: Setup Cloud SDK
@@ -84,27 +80,9 @@ jobs:
       - name: Create staging account
         if: ${{ env.NETWORK == 'staging' }}
         run: |
-          sudo add-apt-repository -y ppa:ethereum/ethereum
-          sudo apt-get update
-          sudo apt-get install ethereum
-          echo -n 'A' > secret.txt
-          geth attach http://127.0.0.1:8545
-          geth account new --password secret.txt
-          cd packages/protocol && DEBUG=* yarn run fund-burner -n ${{ env.NETWORK }}
-          cd ../..
-          FROM=$(cat burner.txt)
-          geth --unlock $FROM --password secret.txt
-
-      # - name: Test
-          # mkdir celo-data-dir
-          # cd celo-data-dir
-          # ./../packages/celotool/bin/celotooljs.sh geth init --celo-env staging --data-dir $PWD:/root/.celo --geth-dir /root/.celo 
-          # ./packages/celotool/bin/celotooljs.sh geth create-account --celo-env staging --datadir /root/.celo 
-          # cd packages/protocol && DEBUG=* yarn run fund-burner -n ${{ env.NETWORK }}
-          # cd ../..
-          # FROM=$(cat burner.txt)
-          # ./packages/celotool/bin/celotooljs.sh geth create-account --celo-env celo-testnet --datadir $PWD:/root/.celo
-     
+          cd packages/protocol && DEBUG=* yarn run fund-burner -n ${{ env.NETWORK }} -s ${{ secrets.STAGING_PRIVATEKEY}}
+          ./../packages/celotool/bin/celotooljs.sh account faucet -e staging --accounts '0x7a35C7d6846350BFd3904E97343e59Eee85cf472' --amount [celo, 1000]
+ 
       - name: Fund burner account
         if: ${{ env.NETWORK != 'staging' }}
         run: |
