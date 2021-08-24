@@ -32,6 +32,8 @@ jobs:
           npm install --global yarn
           yarn
           yarn build --ignore docs
+          cd packages/sdk/wallet-rpc
+          yarn build
       
       - name: Setup celotool
         run: |
