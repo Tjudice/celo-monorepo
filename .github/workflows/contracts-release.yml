@@ -31,10 +31,7 @@ jobs:
         run: |
           npm install --global yarn
           yarn
-          yarn lerna bootstrap
-
-      - name: Build packages
-        run: yarn build --ignore docs
+          yarn build --ignore docs
       
       - name: Setup celotool
         run: |
