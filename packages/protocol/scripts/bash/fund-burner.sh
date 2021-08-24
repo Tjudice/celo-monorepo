@@ -11,13 +11,13 @@ set -euo pipefail
 
 NETWORK=""
 KEY=""
-STAGINGKEY=""
+AMOUNT=""
 
-while getopts 'n:k:s:' flag; do
+while getopts 'n:k:a:' flag; do
   case "${flag}" in
     n) NETWORK="${OPTARG}" ;;
-    k) KEY="--key ${OPTARG}" ;;
-    s) STAGINGKEY="--staging_key ${OPTARG}" ;;
+    k) KEY="${OPTARG}" ;;
+    a) AMOUNT="--amount ${OPTARG}" ;;
     *) error "Unexpected option ${flag}" ;;
   esac
 done
@@ -26,5 +26,5 @@ done
 
 yarn run truffle exec ./scripts/truffle/fund_burner_account.js \
   --network $NETWORK \
-  $KEY \
-  $STAGINGKEY
+  --key $KEY \
+  $AMOUNT
