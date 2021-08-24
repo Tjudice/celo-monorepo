@@ -13,7 +13,7 @@ NETWORK=""
 KEY=""
 STAGINGKEY=""
 
-while getopts 'n:k:a:' flag; do
+while getopts 'n:k:s:' flag; do
   case "${flag}" in
     n) NETWORK="${OPTARG}" ;;
     k) KEY="--key ${OPTARG}" ;;
