@@ -86,7 +86,7 @@ jobs:
         if: ${{ env.NETWORK == 'staging' }}
         run: |
           cd packages/protocol && DEBUG=* yarn run fund-burner -n ${{ env.NETWORK }} -s ${{ secrets.STAGING_PRIVATEKEY}}
-          ./../celotool/bin/celotooljs.sh account faucet -e staging --accounts '0x7a35C7d6846350BFd3904E97343e59Eee85cf472' --amount [celo, 1000]
+          ./../celotool/bin/celotooljs.sh account faucet -e staging --account '0x7a35C7d6846350BFd3904E97343e59Eee85cf472' --tokenParams CELO,20
      
       - name: Fund burner account
         if: ${{ env.NETWORK != 'staging' }}
