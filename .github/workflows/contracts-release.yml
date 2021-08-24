@@ -38,7 +38,9 @@ jobs:
           yarn lerna bootstrap
 
       - name: Build packages
-        run: yarn lerna run build --ignore docs
+        run: |
+        yarn lerna run build --ignore docs
+        cd scripts && tsc fund_burner_account.ts
       
       - name: Setup celotool
         run: |
