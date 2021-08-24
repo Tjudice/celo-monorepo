@@ -40,12 +40,7 @@ jobs:
         run: |
           npm install --global yarn
           yarn
-          cd packages/sdk/wallets/wallet-rpc
           yarn build
-          cd ../../../../
-          yarn build --ignore docs
-
-      
       - name: Setup celotool
         run: |
           alias celotooljs=/home/runner/work/celo-monorepo/celo-monorepo/packages/celotool/bin/celotooljs.sh
