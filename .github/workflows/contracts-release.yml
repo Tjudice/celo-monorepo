@@ -38,11 +38,11 @@ jobs:
 
       - name: yarn
         run: |
-          brew install yarn
+          npm install --global yarn
           yarn
           cd packages/sdk/wallets/wallet-rpc
           yarn build
-          cd ../../..
+          cd ../../../../
           yarn build --ignore docs
 
       
