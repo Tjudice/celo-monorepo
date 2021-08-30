@@ -25,11 +25,15 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          fetch-depth: 0 
+          fetch-depth: 0 # all history
 
       - uses: actions/setup-node@v2
         with:
           node-version: '12'
+      # - name: Deploy script
+      #   run: |
+      #     cd packages/protocol && yarn run deploy -b a -n alfajores -v 5 -k a -p Trevor
+        
 
       - name: yarn
         run: |
@@ -38,29 +42,7 @@ jobs:
           yarn lerna bootstrap
 
       - name: Build packages
-        run: |
-          yarn lerna run build --ignore docs
-      
-      - name: Setup celotool
-        run: |
-          alias  celotooljs=/home/runner/work/celo-monorepo/celo-monorepo/packages/celotool/bin/celotooljs.sh
-
-
-      - name: Setup Cloud SDK
-        if: ${{ env.NETWORK == 'staging' }}
-        uses: google-github-actions/setup-gcloud@master
-        with:
-          project_id: 'celo-testnet'
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
-          export_default_credentials: true
-
-      - name: Setup port-forward
-        if: ${{ env.NETWORK == 'staging' }}
-        run: |
-          gcloud container clusters get-credentials celo-networks-dev --project celo-testnet --zone us-west1-a
-          kubectl config set-context --current --namespace default
-          kubectl port-forward --namespace=staging staging-validators-0 8545:8545 &
-          sleep 10
+        run: yarn lerna run build --ignore docs
 
       - name: Setup lightest node    
         if: ${{ env.NETWORK != 'staging' }}
@@ -82,17 +64,23 @@ jobs:
         run: |
           while true; do output=$(docker exec -i celo-lightestnode geth attach --exec "eth.syncing" | sed -r "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g"); echo $output; sleep 1; if [ $output == 'false' ]; then break; fi; done
 
-      - name: Create staging account
-        if: ${{ env.NETWORK == 'staging' }}
-        run: |
-          cd packages/protocol && DEBUG=* yarn run fund-burner -n ${{ env.NETWORK }} -s ${{ secrets.STAGING_PRIVATEKEY}}
-          ./../celotool/bin/celotooljs.sh account faucet -e staging --account '0x7a35C7d6846350BFd3904E97343e59Eee85cf472' --tokenParams CELO,20
-     
+      # - name: Checking if node is synced
+      #   if: ${{ env.NETWORK != 'staging' }}
+      #   run: |
+      #     while true; do output=$(docker exec -i celo-lightestnode geth attach --exec "eth.syncing" | sed -r "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g"); echo $output; sleep 1; if [ $output == 'false' ]; then break; fi; done
+
+      # - name: Add private key to node
+      #   run: |
+      #     echo '${{ secrets.ALFAJORES_PRIVKEY }}' > privkey.txt
+      #     echo '${{ secrets.PW }}' > password.txt
+      #     geth account import --password password.txt privkey.txt
+      #     rm privkey.txt
+      #     geth account unlock 
+      # -f 0x7F871c887e6a430D3c1F434737F568B07559F9E7
       - name: Fund burner account
-        if: ${{ env.NETWORK != 'staging' }}
         run: |
           cd packages/protocol && DEBUG=* yarn run fund-burner -n ${{ env.NETWORK}} -k ${{ secrets.ALFAJORES_PRIVKEY }}
-      
+
       - name: Get branch name
         shell: bash
         run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
@@ -101,7 +89,7 @@ jobs:
       - name: Verify previous release
         run: |
           export OLD_BRANCH=core-contracts.v$((${{ env.VERSION }}-1))
-          cd packages/protocol && yarn run verify-deployed -b $OLD_BRANCH -n ${{ env.NETWORK }};
+          cd packages/protocol && yarn run verify-deployed -b $OLD_BRANCH -n ${{ env.NETWORK }} -f;
 
       - name: Verify version compatibility
         run: |
@@ -114,5 +102,3 @@ jobs:
           FROM=$(cat burner.txt)
           NEW_BRANCH=${{ steps.get_branch.outputs.branch }}
           cd packages/protocol && DEBUG=* yarn run make-release -b $NEW_BRANCH -n ${{ env.NETWORK }} -f $FROM -p proposal.json -r report.json -i ./releaseData/initializationData/release${{ env.VERSION }}.json -l libraries.json;
-
-#
