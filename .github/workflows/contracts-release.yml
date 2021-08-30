@@ -114,3 +114,5 @@ jobs:
           FROM=$(cat burner.txt)
           NEW_BRANCH=${{ steps.get_branch.outputs.branch }}
           cd packages/protocol && DEBUG=* yarn run make-release -b $NEW_BRANCH -n ${{ env.NETWORK }} -f $FROM -p proposal.json -r report.json -i ./releaseData/initializationData/release${{ env.VERSION }}.json -l libraries.json;
+
+#

@@ -40,6 +40,7 @@ module.exports = async (callback: (error?: any) => number) => {
       })
 
       //Send transaction from secure local wallet to burner account on node
+      //CHANGE PRIVATE KEY
       await sendTransactionWithPrivateKey(
         web3,
         null,
