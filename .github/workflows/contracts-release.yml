@@ -44,17 +44,28 @@ jobs:
       - name: Build packages
         run: yarn lerna run build --ignore docs
       
-      - name: Setup Cloud SDK
+      - name: Setup Cloud SDK for decrypting
+        uses: google-github-actions/setup-gcloud@master
+        with:
+          project_id: 'celo-testnet'
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
+      
+      - name: Decrypt environment mnemonics
+        run: |
+          gcloud kms decrypt --ciphertext-file=.env.mnemonic.enc --plaintext-file=.env.mnemonic --key=github-key --keyring=celo-keyring --location=global --project celo-testnet
+          gcloud kms decrypt --ciphertext-file=.env.mnemonic.alfajores.enc --plaintext-file=.env.mnemonic.alfajores --key=github-key --keyring=celo-keyring --location=global --project celo-testnet
+          gcloud kms decrypt --ciphertext-file=.env.mnemonic.baklava.enc --plaintext-file=.env.mnemonic.baklava --key=github-key --keyring=celo-keyring --location=global --project celo-testnet
+
+      - name: Setup Cloud SDK for fauceting
         uses: google-github-actions/setup-gcloud@master
         with:
           project_id: 'celo-testnet'
           service_account_key: ${{ secrets.GCP_SA_KEY_2 }}
           export_default_credentials: true
+      
       - name: Set gcloud project
         run: |
-          gcloud kms decrypt --ciphertext-file=.env.mnemonic.enc --plaintext-file=.env.mnemonic --key=github-key --keyring=celo-keyring --location=global --project celo-testnet
-          gcloud kms decrypt --ciphertext-file=.env.mnemonic.alfajores.enc --plaintext-file=.env.mnemonic.alfajores --key=github-key --keyring=celo-keyring --location=global --project celo-testnet
-          gcloud kms decrypt --ciphertext-file=.env.mnemonic.baklava.enc --plaintext-file=.env.mnemonic.baklava --key=github-key --keyring=celo-keyring --location=global --project celo-testnet
           gcloud config set project celo-testnet-production
 
       - name: Setup lightest node    
