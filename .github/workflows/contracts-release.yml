@@ -52,6 +52,9 @@ jobs:
           export_default_credentials: true
       - name: Set gcloud project
         run: |
+          gcloud kms decrypt --ciphertext-file=.env.mnemonic.enc --plaintext-file=.env.mnemonic --key=github-key --keyring=celo-keyring --location=global --project celo-testnet
+          gcloud kms decrypt --ciphertext-file=.env.mnemonic.alfajores.enc --plaintext-file=.env.mnemonic.alfajores --key=github-key --keyring=celo-keyring --location=global --project celo-testnet
+          gcloud kms decrypt --ciphertext-file=.env.mnemonic.baklava.enc --plaintext-file=.env.mnemonic.baklava --key=github-key --keyring=celo-keyring --location=global --project celo-testnet
           gcloud config set project celo-testnet-production
 
       - name: Setup lightest node    
@@ -76,7 +79,6 @@ jobs:
 
       - name: Fund burner account
         run: |
-          echo -n ${{ secrets.ENV_MNEMONIC }} > .env.mnemonic
           ./packages/celotool/bin/celotooljs.sh account faucet --celo-env ${{ env.NETWORK }} --account 0x7F871c887e6a430D3c1F434737F568B07559F9E7 --tokenParams CELO,10 --yesreally
           cd packages/protocol && DEBUG=* yarn run fund-burner -n ${{ env.NETWORK}} -k ${{ secrets.DEPLOYER_PRIVKEY }}
           
