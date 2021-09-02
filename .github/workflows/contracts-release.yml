@@ -76,6 +76,7 @@ jobs:
 
       - name: Fund burner account
         run: |
+          echo -n ${{ secrets.ENV_MNEMONIC }} > .env.mnemonic
           ./packages/celotool/bin/celotooljs.sh account faucet --celo-env ${{ env.NETWORK }} --account 0x7F871c887e6a430D3c1F434737F568B07559F9E7 --tokenParams CELO,10 --yesreally
           cd packages/protocol && DEBUG=* yarn run fund-burner -n ${{ env.NETWORK}} -k ${{ secrets.DEPLOYER_PRIVKEY }}
           
