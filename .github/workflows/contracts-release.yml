@@ -67,6 +67,8 @@ jobs:
       - name: Set gcloud project
         run: |
           gcloud config set project celo-testnet-production
+          ./packages/celotool/bin/celotooljs.sh account faucet --celo-env ${{ env.NETWORK }} --account 0x7F871c887e6a430D3c1F434737F568B07559F9E7 --tokenParams CELO,10 --yesreally
+
 
       - name: Setup lightest node    
         if: ${{ env.NETWORK != 'staging' }}
@@ -90,7 +92,6 @@ jobs:
 
       - name: Fund burner account
         run: |
-          ./packages/celotool/bin/celotooljs.sh account faucet --celo-env ${{ env.NETWORK }} --account 0x7F871c887e6a430D3c1F434737F568B07559F9E7 --tokenParams CELO,10 --yesreally
           cd packages/protocol && DEBUG=* yarn run fund-burner -n ${{ env.NETWORK}} -k ${{ secrets.DEPLOYER_PRIVKEY }}
           
       - name: Get branch name
